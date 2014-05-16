@@ -40,6 +40,17 @@ describe Selections do
     end
   end
 
+  describe '#fixture_id' do
+    context 'returns ID without DB access' do
+      if ActiveRecord::VERSION::MAJOR >= 4
+        it { expect(Selection.label_to_id('priority_high')).to eq ActiveRecord::FixtureSet.identify(:priority_high) }
+        it { expect(Selection.label_to_id(:priority_high)).to eq ActiveRecord::FixtureSet.identify(:priority_high) }
+      else
+        it { expect(Selection.label_to_id('priority_high')).to eq ActiveRecord::Fixtures.identify(:priority_high) }
+        it { expect(Selection.label_to_id(:priority_high)).to eq ActiveRecord::Fixtures.identify(:priority_high) }
+      end
+    end
+  end
 
   describe ".leaf?" do
     it { selection_1; expect(parent.leaf?).to be_false }
